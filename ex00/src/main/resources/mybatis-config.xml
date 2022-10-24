@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<!-- mapper.xml에서 resultType이랑 parameterType을 풀네임으로 쓰는게 귀찮으니 alias로 만들기 -->
+	<!-- mybatis 안에서 쓰는 별칭임. 별칭관리 -->
+	<typeAliases>
+		<!-- <typeAlias type="com.yedam.java.emp.service.EmpVO" alias="empInfo"/> -->
+		<package name="com.yedam.java.emp.service"/><!-- 여기서 찾게끔 -->
+	</typeAliases>
+	
+	<!-- int String은 문제 없지만, Date타입은 좀 문제가 되어서 핸들해줘야함. -->
+	<typeHandlers>
+		<!-- java.sql.Timestamp를 java.util.Date형으로 변환 -->
+		<typeHandler javaType="java.sql.Date" handler="org.apache.ibatis.type.DateTypeHandler"/>
+	</typeHandlers>
+</configuration>

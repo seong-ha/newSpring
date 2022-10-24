@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
+<log4j:configuration
+	xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+	<!-- Appenders -->
+	<appender name="console"
+		class="org.apache.log4j.ConsoleAppender">
+		<param name="Target" value="System.out" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<!-- 콘솔에 나열되는 애 -->
+			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
+		</layout>
+	</appender>
+
+	<!-- Application Loggers -->
+	<!-- 빈이 생성되었는지까지는 debug level -->
+	<logger name="com.yedam.java">
+		<level value="info" />
+	</logger>
+
+	<!-- 여기꺼부터는 스프링꺼 건들면 안된다. -->
+	<!-- 3rdparty Loggers -->
+	<logger name="org.springframework.core">
+		<level value="info" />
+	</logger>
+
+	<!-- 빈 생성이 안될때 여기 debug -->
+	<logger name="org.springframework.beans">
+		<level value="info" />
+	</logger>
+
+	<!-- 컨테이너가 깨지거나 생성이 안될때 여기 debug -->
+	<logger name="org.springframework.context">
+		<level value="info" />
+	</logger>
+
+	<!-- request Mapping 안될때 debug -->
+	<logger name="org.springframework.web">
+		<level value="info" />
+	</logger>
+	<!-- 가능한 sql만 어쩌고 저쩌고 -->
+	<logger name="jdbc.sqlonly">
+		<level value="info" />
+	</logger>
+	<!-- 소요시간 -->
+	<logger name="jdbc.sqltiming">
+		<level value="info" />
+	</logger>
+	<!-- select했을때 그 반환결과를 테이블 형태로 보여주는 건 애다. -->
+	<logger name="jdbc.resultsettable">
+		<level value="info" />
+	</logger>
+
+	<logger name="jdbc.audit">
+		<level value="warn" />
+	</logger>
+	<!-- select했을때 그 반환결과 -->
+	<logger name="jdbc.resultset">
+		<level value="warn" />
+	</logger>
+	<!-- 위에꺼는 중점적으로 관리하려고 등록한 애들. 나중에 또 관리하려면 등록하면 된다. -->
+	<!-- 위에꺼 제외하고 나머지 로그들 애가 다 함. -->
+	<!-- Root Logger -->
+	<root>
+		<priority value="warn" />
+		<appender-ref ref="console" />
+	</root>
+
+</log4j:configuration>

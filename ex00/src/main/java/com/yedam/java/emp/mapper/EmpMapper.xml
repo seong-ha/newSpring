@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.java.emp.mapper.EmpMapper">
+<!-- mybatis는 sql문을 그대로 보내주는 게 장점. 그러나 문법적으로 맞는지 컴파일은 안해준다. 걍 보낸다. -->
+<!-- 보통 하나정도 만들면 일단 잘 연결되었는지 테스트부터해본다. -->
+
+	<!-- resultMap은 mybatis 안에서 새로운 타입을 만들어내는거다. -->
+	<!-- <resultMap type="EmpVO" id="empInfo">
+		<id column="employee_id" property="employeeId"/>
+		<result column="last_name" property="lastName"/>
+	</resultMap> -->
+
+	<!-- 전체 조회 -->
+	<select id="getEmpList" resultType="EmpVO">
+		SELECT * FROM employees ORDER BY employee_id
+	</select>
+	
+	<!-- 단건 조회 -->
+	<select id="getEmp" resultType="EmpVO" parameterType="EmpVO">
+		SELECT *
+		FROM employees
+		<where>
+			<if test="employeeId != 0">
+				employee_id = #{employeeId}
+			</if>
+			<if test="firstName != null and !firstName.equals('')">
+				AND first_name = #{firstName}
+			</if>
+		</where><!-- set태그과 같은 기능(안에 없으면 사라지는) -->
+		<!-- employeeId는 EmpVO의 employeeId 필드를 가져오는 getter의 이름으로 검색해서 가져온다.
+		그래서 getEmpId라고 getter를 만들면 empId라고 적으면 된다. 이럴때가 종종많다. -->
+	</select>
+	
+	<!-- 등록 -->
+	<insert id="insertEmp" parameterType="EmpVO">
+	<!-- order가 언제 실행시점 결정. -->
+		<selectKey keyProperty="employeeId" resultType="integer" order="BEFORE">
+			SELECT CASE WHEN MAX(employee_id) IS NULL THEN 1 ELSE
+			MAX(employee_id) + 1 END AS employeeId
+			FROM employees
+		 </selectKey>
+		 
+		INSERT INTO employees
+					(employee_id,
+					 first_name,
+					 last_name,
+					 email,
+					 phone_number,
+					 <if test="hireDate != null">
+					 	hire_date,
+					 </if>
+			         job_id,
+			         salary)
+			         <!-- 마지막 column에 대해서는 앞부분 column끝의 ',' 때문에 if문을 안쓰는걸 추천 -->
+			VALUES (#{employeeId},
+			        #{firstName},
+			        #{lastName},
+			        #{email},
+			        #{phoneNumber},
+			        <if test="hireDate != null">
+			        	#{hireDate},
+			        </if>
+			        #{jobId},
+			        #{salary})
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateEmpSalary" parameterType="integer">
+		UPDATE employees
+		SET salary = salary * 1.1
+		WHERE employee_id = #{eId}
+		
+	</update>
+	
+	<update id="updateEmpInfo" parameterType="EmpVO">
+		UPDATE employees
+		
+		<set>
+			<!-- ★★★★ test속성 값공간은 java다. ★★★★ -->
+			<if test="firstName != null and !firstName.equals('')">
+				first_name = #{firstName},
+			</if>
+			<if test="lastName != null and !lastName.equals('')">
+				last_name = #{lastName},
+			</if>
+			<if test="email != null and !email.equals('')">
+				email = #{email}
+			</if>
+		</set>
+		
+		WHERE employee_id = #{employeeId}
+		
+		<!-- if태그로 update구문 전체를 바꿔서 할 수도 있다. -->
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteEmpInfo" parameterType="integer">
+		DELETE FROM employees
+		WHERE employee_id = #{employeeId}
+	</delete>
+</mapper>

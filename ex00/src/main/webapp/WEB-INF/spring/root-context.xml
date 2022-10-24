@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<bean id="logAop" class="com.yedam.java.test.service.LogAop" />
+	
+	<aop:config>
+		<!-- 어드바이스와 포인트컷을 연결하는 설정 -->
+		<aop:aspect id="logger" ref="logAop">
+			<aop:pointcut expression="within(com.yedam.java.test.service.*)" id="public"/>
+			<aop:around method="loggerAop" pointcut-ref="public"/><!-- 위빙때 사용될 방식 설정 -->
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="myCat" class="com.yedam.java.test.service.Cats">
+		<property name="name" value="백호" />
+		<property name="age" value="1000" />
+		<property name="color" value="white" />
+	</bean>
+</beans>
