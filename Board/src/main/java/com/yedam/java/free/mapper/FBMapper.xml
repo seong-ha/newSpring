@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.java.free.mapper.FBMapper">
+	<!-- 전체 조회 -->
+	<select id="getBoardList" resultType="FBVO">
+		SELECT * FROM board ORDER BY bno
+	</select>
+	
+	<!-- 단건 조회 -->
+	<select id="getBoardInfo" parameterType="FBVO" resultType="FBVO">
+		SELECT bno,
+		       title,
+		       contents,
+		       writer,
+		       regdate,
+		       updatedate,
+		       image
+		FROM board
+		<!-- 동일한 작성자 게시글 번호 다르기 때문 -->
+		<where>
+			<if test="writer != null and !writer.equals('')">
+				writer = #{writer}
+			</if>
+			<if test="bno > 0">
+				AND bno = #{bno}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 등록 -->
+	<insert id="insertBoard" parameterType="FBVO">
+		INSERT INTO board (bno
+		                   , title
+		                   , contents
+		                   , writer
+		                   <if test="regdate != null and !regdate.equals('')">
+		                   	   , regdate
+		                   </if>
+		                   , updatedate
+		                   <if test="image != null and !image.equals('')">
+		                       ,image
+		                   </if>
+		                   )
+		         VALUES (#{bno}
+		                 , #{title}
+		                 , #{contents}
+		                 , #{writer}
+		                 <if test="regdate != null and !regdate.equals('')">
+		                 	, #{regdate}
+		                 </if>
+		                 , sysdate
+		                 <if test="image != null and !image.equals('')">
+		                 	, #{image}
+	                     </if>
+		                 )
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateBoard" parameterType="FBVO">
+		UPDATE board
+		
+		<set>
+			<if test="title != null and !title.equals('')">
+				title = #{title},
+			</if>
+			<if test="contents != null and !contents.equals('')">
+				contents = #{contents},
+			</if>
+			<if test="image != null and !image.equals('')">
+				image = #{image},
+			</if>
+			
+			<!-- 수정일 입력 안하면 sysdate -->
+			<if test="updatedate != null">
+				updatedate = #{updatedate}
+			</if>
+			<if test="updatedate == null">
+				updatedate = sysdate
+			</if>
+		</set>
+		
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteBoard" parameterType="FBVO">
+		DELETE FROM board WHERE bno = #{bno}
+		<!-- @Param에 선언된 이름 : bno -->
+	</delete>
+	
+	<!-- 입력될 게시글 번호 조회 -->
+	<select id="getBoardNo" resultType="FBVO">
+		SELECT NVL(MAX(bno), 0) + 1 AS bno FROM board
+	</select>
+</mapper>
