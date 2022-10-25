@@ -8,7 +8,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 </head>
 <body>
-	<form id="insertForm" action="insert" method="post" onsubmit="return formOption">
+	<form id="insertForm" action="insert" method="post" onsubmit="return formOption()">
 		<div>
 			<h3>게시글 등록</h3>
 		</div>
@@ -39,16 +39,17 @@
 	</form>
 	<script type="text/javascript">
 		$(document).ready(function () {
-			$('button[type="submit"]').click(formOption);
+			/* $('button[type="submit"]').click(formOption); */
 			$('button:contains("목록")').click(function () {
 				location.href='list';
 			});
 		});
 		
 		function formOption() {
-			let title = $('input[name="title"]')
-			let writer = $('input[name="writer"]')
-			let contents = $('textarea[name="contents"]')
+			
+			let title = $('input[name="title"]');
+			let writer = $('input[name="writer"]');
+			let contents = $('textarea[name="contents"]');
 			
 			if (title.val() == "") {
 				alert("제목이 입력되지 않았습니다.");
