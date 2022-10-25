@@ -20,19 +20,31 @@ public class UsersServiceImpl implements UsersService{
 	}
 
 	@Override
+	public List<UsersVO> getAdminUsersList() {
+		return usersMapper.adminSelectUsersList();
+	}
+	
+	@Override
 	public String loginCheck(UsersVO usersVO) {
 		String msg = "";
-		System.out.println("★★★★★★★★★★★★★★★★★★★★★★★★");
-		// DB에서 가져온 아이디 비번과 비교한 결과에 따라 msg return
+		
+		// DB에서 가져온 아이디, 비번, 권한을 비교한 결과에 따라 msg 코드 return
 		UsersVO vo = usersMapper.selectUsers(usersVO);
-		if (!usersVO.getUserId().equals(vo.getUserId())) {
+		if (vo == null) {
 			msg = "id";
-		} else if (!usersVO.getUserPassword().equals(vo.getUserPassword())) {
-			msg = "pw";
 		} else {
-			msg ="success";
+			if (!usersVO.getUserPassword().equals(vo.getUserPassword())) {
+				msg = "pw";
+			} else if (!vo.getUserType().equals("0")) {
+				msg = "type";
+			} else {
+				msg ="success";
+			}
 		}
+		
 		return msg;
 	}
+
+	
 	
 }

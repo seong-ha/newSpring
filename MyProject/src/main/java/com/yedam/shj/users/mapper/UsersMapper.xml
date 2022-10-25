@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.shj.users.mapper.UsersMapper">
+	
+	<!-- 메인 페이지용 리스트 -->
 	<select id="mainSelectUsersList" resultType="UsersVO">
 		SELECT user_id,
 		       user_name,
@@ -10,14 +12,24 @@
 		FROM users 
 	</select>
 	
+	<!-- 관리자 페이지용 리스트 -->
+	<select id="adminSelectUsersList" resultType="UsersVO">
+		SELECT user_id,
+		       user_name,
+		       user_date
+		FROM users 
+	</select>
+	
 	<select id="selectUsers" parameterType="UsersVO" resultType="UsersVO">
 		SELECT user_id,
 		       user_name,
-		       user_date,
+			   user_password,
 		       user_nic,
 		       user_phone,
-		       user_email
+		       user_date,
+		       user_email,
+		       user_type
 		FROM users
-		WHERE user_no = #{userNo}
+		WHERE user_id = #{userId}
 	</select>
 </mapper>

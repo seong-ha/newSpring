@@ -20,22 +20,31 @@ public class UsersController {
 	@Autowired
 	UsersService usersService;
 	
+	// 메인 페이지용 리스트
 	@GetMapping("mainList")
 	public String mainList(Model model) {
-		List<UsersVO> list = usersService.getMainUsersList();
 		model.addAttribute("list", usersService.getMainUsersList());
 		return "users/mainList";
 	}
 	
+	// 관리자 로그인 폼
 	@GetMapping("loginForm")
 	public String loginForm() {
 		return "users/loginForm";
 	}
 	
+	// 관리자 로그인 체그(아이디, 비번, 권한)
 	@PostMapping("loginCheck")
 	@ResponseBody
-	public String loginCheck(@RequestBody UsersVO usersVO) {
+	public String loginCheck(UsersVO usersVO) {
 		String msg = usersService.loginCheck(usersVO);
 		return msg;
+	}
+	
+	// 관리자 로그인 성공 후 관리자 페이지용 리스트
+	@GetMapping("login")
+	public String login(Model model) {
+		model.addAttribute("list", usersService.getAdminUsersList());
+		return "users/adminList";
 	}
 }
