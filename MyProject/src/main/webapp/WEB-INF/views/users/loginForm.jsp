@@ -15,6 +15,9 @@
 		<input type="password" name="userPassword" required/>
 		<button onclick="check()">로그인</button>
 	</div>
+	<form id="loginForm" action="login" method="post">
+		<input type="hidden" name="userType" id="userType">
+	</form>
 	<script type="text/javascript">
 		function check() {
 			let id = $('input[name="userId"]');
@@ -31,29 +34,26 @@
 			}
 			
 			$.ajax({
-                url : 'http://localhost/shj/users/loginCheck',
+                url : 'http://localhost:8081/shj/users/loginCheck',
                 type : 'post',
                 data : { "userId" : id.val(),
 						 "userPassword" : pw.val() },
                 success : function (data) {
                 	// 반환 코드별로 메세지 alert.
-                    if (data == 'id') {
+                	console.log(data);
+                    if (data.msg == 'id') {
                     	alert('존재하지 않는 아이디입니다.');
                     	id.val('');
                     	pw.val('');
                     	$(id).focus();
-                    } else if (data == 'pw') {
+                    } else if (data.msg == 'pw') {
                     	alert('비밀번호가 틀렸습니다.');
                     	pw.val('');
                     	$(pw).focus();
-                    } else if (data == 'type') {
-                    	alert('관리자가 아닙니다.');
-                    	id.val('');
-                    	pw.val('');
-                    	$(id).focus();
                     } else {
                     	alert("정상적으로 로그인되었습니다.");
-                    	location.href = 'login';
+                    	$('#userType').val(data.type);
+                    	$('#loginForm').submit();
                     }
                 },
                 error : function (reject) {

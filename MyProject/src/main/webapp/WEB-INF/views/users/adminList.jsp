@@ -45,6 +45,9 @@
 		<thead>
 			<tr>
 				<th>아이디</th>
+				<c:if test="${type == 0}">
+					<th>비번</th>
+				</c:if>
 				<th>이름</th>
 				<th>가입일자</th>
 			</tr>
@@ -53,6 +56,9 @@
 			<c:forEach items="${list}" var="users">
 				<tr>
 					<td>${users.userId}</td>
+					<c:if test="${type == 0}">
+						<td>${users.userPassword}</td>
+					</c:if>
 					<td>${users.userName}</td>
 					<td><fmt:formatDate pattern="yyyy년 MM월 dd일" value="${users.userDate}"/></td>
 				</tr>

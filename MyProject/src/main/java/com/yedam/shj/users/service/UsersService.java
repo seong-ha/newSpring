@@ -1,9 +1,10 @@
 package com.yedam.shj.users.service;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UsersService {
 	List<UsersVO> getMainUsersList();
 	List<UsersVO> getAdminUsersList();
-	String loginCheck(UsersVO usersVO);
+	Map<String, String> loginCheck(UsersVO usersVO);
 }
