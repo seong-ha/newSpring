@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 시큐리티 체크 안 할거 -->
+	<security:http pattern="/css/**" security="none" />
+	
+	<bean id="successHandler" class="com.yedam.java.security.CustomLoginSuccessHandler"></bean>
+	
+	<security:http>
+	    <!-- permitAll 아무나/ admin 해당롤만 / 나머지들은 인증인가? -->
+		<security:intercept-url pattern="/top.jsp"		access="permitAll()" />
+		<security:intercept-url pattern="/login.jsp" 	access="permitAll()" />
+		<security:intercept-url pattern="/login" 		access="permitAll()" />
+		<security:intercept-url pattern="/admin/**" access="hasAuthority('ROLE_ADMIN')" />
+		<security:intercept-url pattern="/**" access="isAuthenticated()" />
+		<!-- 로그인폼은 어디, 로그아웃잘 되면 어디로가기 -->
+		<security:form-login
+			login-page="/login.jsp"
+			username-parameter="userId"
+			login-processing-url="/login"
+			authentication-success-handler-ref="successHandler"
+			default-target-url="/top.jsp" />
+		<security:logout logout-url="/logout" logout-success-url="/top.jsp" />
+		<security:access-denied-handler error-page="/accessDenied.jsp" />
+		<!-- <security:csrf disabled="true" /> -->
+	</security:http>
+	
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<!-- usersbyusernamequery 로그인관련 authorities-by-username-query 롤 관련  -->
+			<security:jdbc-user-service data-source-ref="dataSource"
+				users-by-username-query="select LOGIN_ID, PASSWORD, 1
+  										  from T_USER
+										 where LOGIN_ID = ?"
+				authorities-by-username-query="select LOGIN_ID, ROLE_NAME
+											    from T_ROLE
+											   inner join T_USER_ROLE on T_ROLE.ID = T_USER_ROLE.ROLE_ID
+											   inner join T_USER on T_USER_ROLE.USER_ID = T_USER.ID
+											   where LOGIN_ID = ?"
+			/>
+		<security:password-encoder hash="bcrypt" />
+		    <!-- 현재는 테스트하기 위해 간단히 넣어뒀고 나중에는 jdbc로 옮겨질거다. 패스워드 원래 다 암호화해야된다. 그래서 암호화 안되어있다고
+		    no operation이라고 적어준다. -->
+			<!-- <security:user-service>
+				<security:user name="user" password="{noop}1234" authorities="ROLE_USER" />
+				<security:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN" />
+			</security:user-service> -->
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans>

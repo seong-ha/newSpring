@@ -16,6 +16,10 @@
 	<logger name="com.yedam.java">
 		<level value="info" />
 	</logger>
+	
+	<logger name="com.zaxxer">
+		<level value="warn" />
+	</logger>
 
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
@@ -30,6 +34,10 @@
 		<level value="info" />
 	</logger>
 
+	<logger name="_org.springframework.web">
+		<level value="warn" />
+	</logger>
+	
 	<logger name="org.springframework.web">
 		<level value="info" />
 	</logger>
@@ -56,7 +64,7 @@
 
 	<!-- Root Logger -->
 	<root>
-		<priority value="warn" />
+		<priority value="debug" />
 		<appender-ref ref="console" />
 	</root>
 
